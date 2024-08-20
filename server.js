@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 app.use('/api/thoughts', thoughtRoutes);
 
-//Connect to MondoDB and start server
+//Connect to MongoDB and start server
 mongoose.connect('mongodb://localhost/social-network-api', {
 useNewUrlParser: true,
 useUnifiedTopology: true
@@ -22,7 +22,7 @@ useUnifiedTopology: true
 .then(() => {
     console.log('Connected to MongoDB');
     app.listen(PORT, () =>{
-        CONSOLE.LOG(`Server running on port ${PORT}`);
+        console.log(`Server running on port ${PORT}`);
     });
 })
 .catch(err => {

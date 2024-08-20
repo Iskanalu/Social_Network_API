@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../model/User');
+const User = require('../models/User');
 
 // GET all users
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find().populare('friends');
-        res.jason(users);
+        const users = await User.find().populate('friends');
+        res.json(users);
     }   catch (err) {
         res.status(500).json(err);
+    }
+});
+
+// GET a single user by its _id
+router.get('/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).populate('friends');
+        res.json(user);
+    }   catch (err) {
+        res.status(400).json(err);
     }
 });
 
@@ -42,5 +52,30 @@ router.delete('/:id', async (req, res) => {
         res.status(400).json(err);
     }
 });
+
+router.post('/:id/friends', async(req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        user.friends.push(req.body.friendId);
+        await user.save();
+        res.json(user);
+    }   catch (err) {
+        console.log('err >', err);
+        res.status(400).json(err);
+    }
+});
+
+router.delete('/:id/friends/:friendId', async(req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        user.friends.id(req.params.friendId).remove();
+        await user.save();
+        res.json(user);
+    }   catch (err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
+})
+
 
 module.exports = router;

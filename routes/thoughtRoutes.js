@@ -13,6 +13,16 @@ router.get('/', async (req, res) => {
     }
 });
 
+// GET a single thought by its _id
+router.get('/:id', async (req, res) => {
+    try {
+        const thought = await Thought.findById(req.params.id);
+        res.json(thought);
+    }   catch (err) {
+        res.status(400).json(err);
+    }
+});
+
 // POST create a new thought
 router.post('/', async (req, res) => {
     try {
@@ -37,9 +47,10 @@ router.put('/:id', async (req, res) => {
 //DELETE  a thought
 router.delete('/:id', async (req, res) => {
     try {
-        await Thought.findByAndDelete(req.params.id);
+        await Thought.findByIdAndDelete(req.params.id);
         res.status(204).end();
     }   catch (err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -60,10 +71,11 @@ router.post('/:thoughtId/reactions', async (req, res) => {
   router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
     try {
       const thought = await Thought.findById(req.params.thoughtId);
-      thought.reactions.id(req.params.reactionId).remove();
+      thought.reactions.id(req.params.reactionId).deleteOne();
       await thought.save();
-      res.status(204).end();
+      res.json(thought);
     } catch (err) {
+        console.log(err);
       res.status(400).json(err);
     }
   });

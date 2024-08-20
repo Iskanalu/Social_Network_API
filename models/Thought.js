@@ -14,5 +14,14 @@ const ThoughtSchema = new Schema({
     reactions: [ ReactionSchema]
 });
 
+// Create a virtual field for the friend count
+ThoughtSchema.virtual('reactionCount').get(function() {
+    return this.reactions.length;
+  });
+ 
+ // Ensure virtual fields are serialized
+ ThoughtSchema.set('toJSON', { virtuals: true });
+ ThoughtSchema.set('toObject', { virtuals: true });
+
 const Thought = mongoose.model('Thought', ThoughtSchema);
 module.exports = Thought;
